@@ -1,0 +1,29 @@
+﻿body { padding-top: 50px; padding-bottom: 20px; }
+
+/* Set padding to keep content from hitting the edges */
+.body-content { padding-left: 15px; padding-right: 15px; }
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea { max-width: 100%; }
+
+#anasayfa_araclar { padding-top: 40px; }
+#anasayfa_araclar figure { width: 120px; height: 80px; float: left; position: relative; margin-bottom: 20px; overflow: hidden; }
+#anasayfa_araclar img { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; min-height: 100%; }
+#anasayfa_araclar .detail { float: left; width: calc(100% - 120px); padding-left: 10px; }
+#anasayfa_araclar .detail p { margin-bottom: 10px; }
+#anasayfa_araclar .car:hover { background-color: #f1f1f1; }
+
+#anasayfa_araclar2 { padding-top: 40px; }
+#anasayfa_araclar2 figure { width: 100%; height: 120px; position: relative; margin-bottom: 20px; overflow: hidden; }
+#anasayfa_araclar2 img { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; min-height: 100%; }
+#anasayfa_araclar2 .car:hover { background-color: #f1f1f1; }
+
+#arac_detay { padding-top: 40px; }
+#arac_detay figure { width: 100%; height: 400px; position: relative; margin-bottom: 20px; background-color: #f1f1f1; }
+#arac_detay img { position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; max-width: calc(100% - 20px); max-height: calc(100% - 20px); }
+
+.rezervasyonform { padding: 10px; }
+
+#reservasyontakip_sonuc { display: none; }

@@ -1,0 +1,54 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Yeni Araç Ekle";
+}
+
+<div class="container">
+	<h2>Yeni Araç</h2>
+	<div class="row">
+		<form id="arackayitform">
+			<div class="form-group">
+				<label for="title">Başlık:</label>
+				<input type="text" name="title" class="form-control" id="title">
+			</div>
+			<div class="form-group">
+				<label for="brand">Marka:</label>
+				<input type="text" name="brand" class="form-control" id="brand">
+			</div>
+			<div class="form-group">
+				<label for="model">Model:</label>
+				<input type="text" name="model" class="form-control" id="model">
+			</div>
+			<div class="form-group">
+				<label for="km">Model Yılı:</label>
+				<input type="text" name="km" class="form-control" id="km">
+			</div>
+			<div class="form-group">
+				<label for="modelyear">KM:</label>
+				<input type="text" name="modelyear" class="form-control" id="modelyear">
+			</div>
+			<div class="form-group">
+				<label for="color">Renk:</label>
+				<input type="text" name="color" class="form-control" id="color">
+			</div>
+			<div class="form-group">
+				<label for="price">Fiyat:</label>
+				<input type="text" name="price" class="form-control" id="price">
+			</div>
+			<div class="form-group">
+				<label for="period">Periyot:</label>
+				<select name="period" id="period" class="form-control">
+					<option value="Aylık">Aylık</option>
+					<option value="Yıllık">Yıllık</option>
+					<option value="Günlük">Günlük</option>
+					<option value="Haftalık">Haftalık</option>
+					<option value="Saatlik">Saatlik</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="img">Resim:</label>
+				<input type="text" name="img" class="form-control" id="img">
+			</div>
+			<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+		</form>
+	</div>

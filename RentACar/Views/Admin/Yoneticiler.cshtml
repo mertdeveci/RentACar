@@ -1,0 +1,51 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Yöneticiler";
+	var Yöneticiler = Model as List<admins>;
+	Yöneticiler = Yöneticiler == null ? new List<admins>() : Yöneticiler;
+}
+
+<div class="container">
+	<h2>Yöneticiler <a href="/Admin/YoneticiEkle" class="btn btn-success">Yönetici ekle</a></h2>
+	<div class="row">
+		<div class="panel panel-default">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Ad Soyad</th>
+						<th>Kullanıcı Adı</th>
+						<th>Şifre</th>
+						<th>İşlem</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Yöneticiler.Count > 0)
+					{
+						foreach (var item in Yöneticiler)
+						{
+					<tr>
+						<td>@item.name</td>
+						<td>@item.username</td>
+						<td>@item.password</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a class="btn btn-danger yoneticisil" data-id="@item.id">Sil</a>
+								<a class="btn btn-warning" href="/Admin/YoneticiDuzenle/@item.id">Düzenle</a>
+							</div>
+						</td>
+					</tr>
+						}
+					}
+					else
+					{
+					<tr>
+						<td colspan="5">
+							<div class="alert alert-warning">Yönetici bulunmamaktadır.</div>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

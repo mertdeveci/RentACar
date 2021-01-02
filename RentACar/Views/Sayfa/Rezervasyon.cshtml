@@ -1,0 +1,143 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Rezervasyon";
+	var Cars = Model as List<cars>;
+	Cars = Cars == null ? new List<cars>() : Cars;
+}
+
+<div class="container">
+	<h2>Rezervasyon</h2>
+	<div class="row">
+		<div id="anasayfa_araclar3">
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">Aşağıdan araç seçerek formu doldurun talebinize en hızlı şekilde dönüş yapalım.</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th width="100">#</th>
+								<th>Araç</th>
+								<th>Fiyat</th>
+								<th>Periyot</th>
+								<th>Seç</th>
+							</tr>
+						</thead>
+						<tbody>
+							@if (Cars.Count > 0)
+							{
+								foreach (var item in Cars)
+								{
+							<tr>
+								<td><img src="@item.img" style="max-width: 100px; max-height: 60px;" /></td>
+								<td>
+									<b>@item.title</b><br />
+									<b>Marka: </b>@item.brand<br />
+									<b>Model: </b>@item.model<br />
+									<b>Mdoel Yılı: </b>@item.modelyear<br />
+									<b>Renk: </b>@item.color<br />
+								</td>
+								<td>@item.price ₺</td>
+								<td>@item.period</td>
+								<td><input type="checkbox" name="aracsec" value="@item.id" /></td>
+							</tr>
+								}
+							}
+							else
+							{
+							<tr>
+								<td colspan="5">
+									<div class="alert alert-warning">Araç bulunmamaktadır.</div>
+								</td>
+							</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">Talep Formu</div>
+					<form class="rezervasyonform" id="rezervasyonform">
+						<div class="form-group">
+							<label for="adsoyad">Adınız Soyadınız:</label>
+							<input type="text" name="name" class="form-control" id="adsoyad">
+						</div>
+						<div class="form-group">
+							<label for="phone">Telefon:</label>
+							<input type="text" name="phone" class="form-control" id="phone">
+						</div>
+						<div class="form-group">
+							<label for="email">E-Posta:</label>
+							<input type="text" name="email" class="form-control" id="email">
+						</div>
+						<div class="form-group">
+							<label for="city">Şehir:</label>
+							<input type="text" name="city" class="form-control" id="city">
+						</div>
+						<div class="form-group">
+							<label for="reservationtime">Kiralama Süresi:</label>
+							<select name="reservationtime" class="form-control" id="reservationtime">
+								<option value="1 Saat">1 Saat</option>
+								<option value="1 Hafta">1 Hafta</option>
+								<option value="1 Gün">1 Gün</option>
+								<option value="1 Ay">1 Ay</option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-success btn-block">Rezerve Et</button>
+						<div class="alert alert-warning" style="margin-top: 10px; margin-bottom: 0;">
+							Ücret rezervasyon süresine göre oran oranti ile hesaplanacaktır.
+						</div>
+					</form>
+
+					<div class="panel-heading">Reservasyon Takip</div>
+					<form class="rezervasyonform" id="rezervasyontakipform">
+						<div class="form-group">
+							<label for="reservationcode">Takip Kodu:</label>
+							<input type="text" name="reservationcode" class="form-control" id="reservationcode">
+						</div>
+						<button type="submit" class="btn btn-success btn-block">Sorgula</button>
+						<div id="reservasyontakip_sonuc">
+							<div class="row">
+								<div class="col-md-12"><b>Ad Soyad</b></div>
+								<div class="col-md-12" id="takip_name"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>E-Posta</b></div>
+								<div class="col-md-12" id="takip_email"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Telefon</b></div>
+								<div class="col-md-12" id="takip_phone"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Şehir</b></div>
+								<div class="col-md-12" id="takip_city"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Rezervasyon Süresi</b></div>
+								<div class="col-md-12" id="takip_reservationtime"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Araçlar</b></div>
+								<div class="col-md-12" id="takip_cars">
+									<div class="panel panel-default">
+										<table class="table"></table>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Rezervasyon durumu</b></div>
+								<div class="col-md-12" id="takip_reservationdurum"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12"><b>Rezervasyon Notu</b></div>
+								<div class="col-md-12" id="takip_reservationnot"></div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

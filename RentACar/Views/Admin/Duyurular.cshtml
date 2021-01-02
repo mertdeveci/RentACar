@@ -1,0 +1,49 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Duyurular";
+	var Duyurular = Model as List<announcements>;
+	Duyurular = Duyurular == null ? new List<announcements>() : Duyurular;
+}
+
+<div class="container">
+	<h2>Duyurular <a href="/Admin/DuyuruEkle" class="btn btn-success">Duyuru ekle</a></h2>
+	<div class="row">
+		<div class="panel panel-default">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Başlık</th>
+						<th>Detay</th>
+						<th>İşlem</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Duyurular.Count > 0)
+					{
+						foreach (var item in Duyurular)
+						{
+					<tr>
+						<td>@item.title</td>
+						<td>@item.description</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a class="btn btn-danger duyurusil" data-id="@item.id">Sil</a>
+								<a class="btn btn-warning" href="/Admin/DuyuruDuzenle/@item.id">Düzenle</a>
+							</div>
+						</td>
+					</tr>
+						}
+					}
+					else
+					{
+					<tr>
+						<td colspan="5">
+							<div class="alert alert-warning">Duyuru bulunmamaktadır.</div>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

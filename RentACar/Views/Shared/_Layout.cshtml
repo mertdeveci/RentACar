@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title</title>
+	<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<script src="~/Scripts/modernizr-2.6.2.js"></script>
+</head>
+<body>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				@Html.ActionLink("Araç Kiralama", "Index", "Anasayfa", new { area = "" }, new { @class = "navbar-brand" })
+			</div>
+			<div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+				<ul class="nav navbar-nav">
+					<li><a href="/Arabalar/Index">Tüm Araçlar</a></li>
+					<li><a href="/Sayfa/Rezervasyon">Rezervasyon</a></li>
+					<li><a href="/Sayfa/Duyurular">Duyurular</a></li>
+					<li><a href="/Sayfa/Iletisim">İletişim</a></li>
+				</ul>
+
+				@if (RentACar.Helpers.Kullanici.GirisKontrol())
+				{
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							Yönetici : @RentACar.Helpers.Kullanici.Yonetici().name
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/Admin">Araçlar</a></li>
+							<li><a href="/Admin/Rezervasyonlar">Rezervasyonlar</a></li>
+							<li><a href="/Admin/Duyurular">Duyurular</a></li>
+							<li><a href="/Admin/Yoneticiler">Yöneticiler</a></li>
+							<li><a href="#" id="cikis">Çıkış Yap</a></li>
+						</ul>
+					</li>
+				</ul>
+				}
+
+				@if (!RentACar.Helpers.Kullanici.GirisKontrol())
+				{
+				<form class="navbar-form navbar-right" id="giris">
+					<div class="form-group">
+						<input type="text" placeholder="kullancı adı" name="username" class="form-control">
+					</div>
+					<div class="form-group">
+						<input type="password" placeholder="şifre" name="password" class="form-control">
+					</div>
+					<button type="submit" class="btn btn-success">Login</button>
+				</form>
+				}
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav"></ul>
+			</div>
+		</div>
+	</div>
+	<div class="container body-content">
+		@RenderBody()
+		<hr />
+		<footer>
+			<p>Araç Kiralama Hizmeti &copy; @DateTime.Now.Year</p>
+		</footer>
+	</div>
+	<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+	<script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>
+
+<script>
+	$(function () {
+
+		$('#giris').submit(function () {
+			$.post('/Islem/Giris', $(this).serialize(), function (data) {
+				if (data) {
+					alert("Giriş başarılı");
+					window.location = "/";
+				} else {
+					alert("Giriş başarısız");
+				}
+			});
+			return false;
+		});
+
+		$('#cikis').click(function () {
+			$.post('/Islem/Cikis', function (data) {
+				if (data) {
+					alert("Çıkış başarılı");
+					window.location = "/";
+				} else {
+					alert("Çıkış yapılamadı");
+				}
+			});
+			return false;
+		});
+
+		$('#rezervasyonform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if ($('[name="aracsec"]:checked').val() == undefined) {
+				$('#rezervasyonform').append('<div class="alert alert-info formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç seçiniz.</div>');
+				return false;
+			}
+			var aracidleri = $.map($('[name="aracsec"]:checked'), function (n, i) { return n.value; }).join(',');
+			if (
+				($('[name="name"]').val() == undefined || $('[name="name"]').val() == null || $('[name="name"]').val().length < 2) ||
+				($('[name="phone"]').val() == undefined || $('[name="phone"]').val() == null || $('[name="phone"]').val().length < 2) ||
+				($('[name="email"]').val() == undefined || $('[name="email"]').val() == null || $('[name="email"]').val().length < 2) ||
+				($('[name="city"]').val() == undefined || $('[name="city"]').val() == null || $('[name="city"]').val().length < 2) ||
+				($('[name="reservationtime"]').val() == undefined || $('[name="reservationtime"]').val() == null || $('[name="reservationtime"]').val().length < 2)
+			) {
+				$('#rezervasyonform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			var datas = {
+				name: $('[name="name"]').val(),
+				phone: $('[name="phone"]').val(),
+				email: $('[name="email"]').val(),
+				city: $('[name="city"]').val(),
+				reservationtime: $('[name="reservationtime"]').val(),
+				cars: aracidleri,
+			}
+			$.post('/Islem/Kayit', datas, function (data) {
+				if (data.sonuc) {
+					$('#rezervasyonform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon kaydınız alınmıştır.<br />Rezervasyon takip kodunuz: <b>' + data.rezervasyonkodu + '</b></div>');
+				} else {
+					$('#rezervasyonform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon kaydı alınırken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+
+		$('#rezervasyontakipform').submit(function () {
+			$('.formmesajlari').remove();
+			$('#reservasyontakip_sonuc').css("display", "none");
+			$.post('/Islem/RezervasyonTakip', { TakipKodu: $('[name="reservationcode"]').val() }, function (data) {
+				if (data.sonuc == 0) {
+					$('#rezervasyonform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon bilgisi alınırken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				} else if (data.sonuc == 1) {
+					$('#rezervasyontakipform #takip_cars table').html();
+					var rez = data.rezervasyon;
+					$('#rezervasyontakipform #takip_name').html(rez.name);
+					$('#rezervasyontakipform #takip_email').html(rez.email);
+					$('#rezervasyontakipform #takip_phone').html(rez.phone);
+					$('#rezervasyontakipform #takip_city').html(rez.city);
+					$('#rezervasyontakipform #takip_reservationtime').html(rez.reservationtime);
+					$('#rezervasyontakipform #takip_reservationdurum').html(rez.isclose ? "<i>Rezervasyon sonlandırıldı.</i>" : "<i>Rezervasyon açık.</i>");
+					$('#rezervasyontakipform #takip_reservationnot').html(rez.reservationnot == undefined ? "Henüz işlem yapılmadı." : rez.reservationnot);
+					for (var i = 0; i < data.araclar.length; i++) {
+						$('#rezervasyontakipform #takip_cars table').append('<tr><td><img style="max-width: 80px; max-height: 60px;" src="' + data.araclar[i].img + '" ></td><td><b>' + data.araclar[i].title + '</b><br /><b>Marka:</b>' + data.araclar[i].brand + '<br /><b>Model:</b>' + data.araclar[i].model + '<br /><b>Model Yılı:</b>' + data.araclar[i].modelyear + '<br /><b>Renk:</b>' + data.araclar[i].color + '<br /><b>KM:</b>' + data.araclar[i].km + '<br /><b>Periyot:</b>' + data.araclar[i].period + '<br /><b>Fiyat:</b>' + data.araclar[i].price + ' ₺</td></tr>');
+					}
+					$('#reservasyontakip_sonuc').css("display", "block");
+				} else if (data.sonuc == 2) {
+					$('#rezervasyontakipform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon bulunamadı.</div>');
+				}
+			});
+			return false;
+		});
+
+		@if (RentACar.Helpers.Kullanici.GirisKontrol())
+		{
+	<text>
+		$('#arackayitform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="title"]').val() == undefined || $('[name="title"]').val() == null || $('[name="title"]').val().length < 2) ||
+				($('[name="brand"]').val() == undefined || $('[name="brand"]').val() == null || $('[name="brand"]').val().length < 2) ||
+				($('[name="model"]').val() == undefined || $('[name="model"]').val() == null || $('[name="model"]').val().length < 2) ||
+				($('[name="modelyear"]').val() == undefined || $('[name="modelyear"]').val() == null || $('[name="modelyear"]').val().length < 2) ||
+				($('[name="km"]').val() == undefined || $('[name="km"]').val() == null || $('[name="km"]').val().length < 0) ||
+				($('[name="color"]').val() == undefined || $('[name="color"]').val() == null || $('[name="color"]').val().length < 2) ||
+				($('[name="price"]').val() == undefined || $('[name="price"]').val() == null || $('[name="price"]').val().length < 2) ||
+				($('[name="period"] option:selected').length < 1) ||
+				($('[name="img"]').val() == undefined || $('[name="img"]').val() == null || $('[name="img"]').val().length < 2)
+			) {
+				$('#arackayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/AracKayit', $('#arackayitform').serialize(), function (data) {
+				if (data == 1) {
+					$('#arackayitform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç kayıt edildi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#arackayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+					window.location = "/";
+				} else {
+					$('#arackayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç kayıt edilirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('#aracduzenleform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="title"]').val() == undefined || $('[name="title"]').val() == null || $('[name="title"]').val().length < 2) ||
+				($('[name="brand"]').val() == undefined || $('[name="brand"]').val() == null || $('[name="brand"]').val().length < 2) ||
+				($('[name="model"]').val() == undefined || $('[name="model"]').val() == null || $('[name="model"]').val().length < 2) ||
+				($('[name="modelyear"]').val() == undefined || $('[name="modelyear"]').val() == null || $('[name="modelyear"]').val().length < 2) ||
+				($('[name="km"]').val() == undefined || $('[name="km"]').val() == null || $('[name="km"]').val().length < 0) ||
+				($('[name="color"]').val() == undefined || $('[name="color"]').val() == null || $('[name="color"]').val().length < 2) ||
+				($('[name="price"]').val() == undefined || $('[name="price"]').val() == null || $('[name="price"]').val().length < 2) ||
+				($('[name="period"] option:selected').length < 1) ||
+				($('[name="img"]').val() == undefined || $('[name="img"]').val() == null || $('[name="img"]').val().length < 2)
+			) {
+				$('#aracduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/AracDuzenle', $('#aracduzenleform').serialize(), function (data) {
+				if (data == 1) {
+					$('#aracduzenleform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç düzenlendi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#aracduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+					window.location = "/";
+				} else if (data == 3) {
+					$('#aracduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç bulunamadı.</div>');
+				} else {
+					$('#aracduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç düzenlenirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('#rezervasyonislemform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			$.post('/Islem/RezervasyonIslem', $('#rezervasyonislemform').serialize(), function (data) {
+				if (data == 1) {
+					$('#rezervasyonislemform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon düzenlendi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 3) {
+					$('#rezervasyonislemform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Rezervasyon bulunamadı.</div>');
+				} else if (data == 2) {
+					$('#rezervasyonislemform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+					window.location = "/";
+				} else {
+					$('#rezervasyonislemform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Araç düzenlenirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('.aracsil').click(function () {
+			var t = $(this);
+			var id = t.attr("data-id");
+			$.post('/Islem/AracSil', { id: id }, function (data) {
+				if (data == 1) {
+					alert('Araç silindi.');
+					window.location.reload();
+				} else if (data == 2) {
+					alert('Yetkiniz yok. Oturum açın.');
+					window.location = "/";
+				} else if (data == 3) {
+					alert('Araç bulunamadı.');
+				} else {
+					alert('Araç silinirken sorun oluştu. Lütfen daha sonra tekrar deneyin.');
+				}
+			});
+			return false;
+		});
+
+		$('.rezervasyonsil').click(function () {
+			var t = $(this);
+			var id = t.attr("data-id");
+			$.post('/Islem/RezervasyonSil', { id: id }, function (data) {
+				if (data == 1) {
+					alert('Rezervasyon silindi.');
+					window.location.reload();
+				} else if (data == 2) {
+					alert('Yetkiniz yok. Oturum açın.');
+					window.location = "/";
+				} else if (data == 3) {
+					alert('Rezervasyon bulunamadı.');
+				} else {
+					alert('Rezervasyon silinirken sorun oluştu. Lütfen daha sonra tekrar deneyin.');
+				}
+			});
+			return false;
+		});
+
+		$('.duyurusil').click(function () {
+			var t = $(this);
+			var id = t.attr("data-id");
+			$.post('/Islem/DuyuruSil', { id: id }, function (data) {
+				if (data == 1) {
+					alert('Duyuru silindi.');
+					window.location.reload();
+				} else if (data == 2) {
+					alert('Yetkiniz yok. Oturum açın.');
+					window.location = "/";
+				} else if (data == 3) {
+					alert('Duyuru bulunamadı.');
+				} else {
+					alert('Duyuru silinirken sorun oluştu. Lütfen daha sonra tekrar deneyin.');
+				}
+			});
+			return false;
+		});
+
+		$('.yoneticisil').click(function () {
+			var t = $(this);
+			var id = t.attr("data-id");
+			$.post('/Islem/YoneticiSil', { id: id }, function (data) {
+				if (data == 1) {
+					alert('Yönetici silindi.');
+					window.location.reload();
+				} else if (data == 2) {
+					alert('Yetkiniz yok. Oturum açın.');
+					window.location = "/";
+				} else if (data == 3) {
+					alert('Yönetici bulunamadı.');
+				} else if (data == 4) {
+					alert('Kendi hesabınızı silemezsiniz.');
+				} else {
+					alert('Yönetici silinirken sorun oluştu. Lütfen daha sonra tekrar deneyin.');
+				}
+			});
+			return false;
+		});
+
+		$('#duyurukayitform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="title"]').val() == undefined || $('[name="title"]').val() == null || $('[name="title"]').val().length < 2) ||
+				($('[name="description"]').val() == undefined || $('[name="description"]').val() == null || $('[name="description"]').val().length < 2)
+			) {
+				$('#duyurukayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/DuyuruEkle', $('#duyurukayitform').serialize(), function (data) {
+				if (data == 1) {
+					$('#duyurukayitform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Duyuru kayıt edildi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#duyurukayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+					window.location = "/";
+				} else {
+					$('#duyurukayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Duyuru kayıt edilirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('#duyuruduzenleform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="title"]').val() == undefined || $('[name="title"]').val() == null || $('[name="title"]').val().length < 2) ||
+				($('[name="description"]').val() == undefined || $('[name="description"]').val() == null || $('[name="description"]').val().length < 2)
+			) {
+				$('#duyuruduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/DuyuruDuzenle', $('#duyuruduzenleform').serialize(), function (data) {
+				if (data == 1) {
+					$('#duyuruduzenleform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Duyuru düzenlendi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#duyuruduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+				} else if (data == 3) {
+					$('#duyuruduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Duyuru bulunamadı.</div>');
+				} else {
+					$('#duyuruduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Duyuru düzenlenirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('#yoneticikayitform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="name"]').val() == undefined || $('[name="name"]').val() == null || $('[name="name"]').val().length < 2) ||
+				($('[name="username"]').val() == undefined || $('[name="username"]').val() == null || $('[name="username"]').val().length < 2) ||
+				($('[name="password"]').val() == undefined || $('[name="password"]').val() == null || $('[name="password"]').val().length < 2)
+			) {
+				$('#yoneticikayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/YoneticiEkle', $('#yoneticikayitform').serialize(), function (data) {
+				if (data == 1) {
+					$('#yoneticikayitform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yönetici kayıt edildi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#yoneticikayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+					window.location = "/";
+				} else {
+					$('#yoneticikayitform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yönetici kayıt edilirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		$('#yoneticiduzenleform').submit(function () {
+			$('.formmesajlari').remove();
+			var t = $(this);
+			if (
+				($('[name="name"]').val() == undefined || $('[name="name"]').val() == null || $('[name="name"]').val().length < 2) ||
+				($('[name="username"]').val() == undefined || $('[name="username"]').val() == null || $('[name="username"]').val().length < 2) ||
+				($('[name="password"]').val() == undefined || $('[name="password"]').val() == null || $('[name="password"]').val().length < 2)
+			) {
+				$('#yoneticiduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Tüm alanları eksiksiz doldurunuz.</div>');
+				return false;
+			}
+			$.post('/Islem/YoneticiDuzenle', $('#yoneticiduzenleform').serialize(), function (data) {
+				if (data == 1) {
+					$('#yoneticiduzenleform').append('<div class="alert alert-success formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yönetici düzenlendi.</div>');
+					setTimeout(function () {
+						window.location.reload();
+					}, 2500);
+				} else if (data == 2) {
+					$('#yoneticiduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yetkiniz yok. Oturum açın.</div>');
+				} else if (data == 3) {
+					$('#yoneticiduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yönetici bulunamadı.</div>');
+				} else {
+					$('#yoneticiduzenleform').append('<div class="alert alert-danger formmesajlari" style="margin-top: 20px; margin-bottom: 0;">Yönetici düzenlenirken sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>');
+				}
+			});
+			return false;
+		});
+
+		</text>
+		}
+	});
+</script>

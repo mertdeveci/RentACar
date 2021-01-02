@@ -1,0 +1,57 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Araç Kiralama Hizmeti";
+	var Cars = Model as List<cars>;
+	Cars = Cars == null ? new List<cars>() : Cars;
+
+	var Topcars = ViewBag.topcars as List<cars>;
+	Topcars = Topcars == null ? new List<cars>() : Topcars;
+}
+
+<div class="container">
+	<div class="row">
+		<div id="anasayfa_araclar2">
+			<h2>En Çok Tercih Edilenler</h2>
+			@if (Cars.Count > 0)
+			{
+				foreach (var item in Cars)
+				{
+					<div class="col-xs-12 col-sm-6 col-md-3 car">
+						<h4>@item.title</h4>
+						<figure><img src="@item.img"></figure>
+						<p><b>Fiyat: </b>@item.price ₺</p>
+						<p><b>Periyot:</b> @item.period</p>
+						<p><a class="btn btn-default" href="/Arabalar/Detay/@item.id" role="button">incele »</a></p>
+					</div>
+				}
+			}
+			else
+			{
+					<div class="alert alert-warning">Araç bulunmamaktadır.</div>
+			}
+		</div>
+		<div class="clearfix"></div>
+		<div id="anasayfa_araclar">
+			<h2>Yeni Araçlar</h2>
+			@if (Cars.Count > 0)
+			{
+				foreach (var item in Cars)
+				{
+			<div class="col-xs-12 col-sm-6 col-md-4 car">
+				<h4>@item.title</h4>
+				<figure><img src="@item.img"></figure>
+				<div class="detail">
+					<p><b>Fiyat: </b>@item.price ₺</p>
+					<p><b>Periyot:</b> @item.period</p>
+					<p><a class="btn btn-default" href="/Arabalar/Detay/@item.id" role="button">incele »</a></p>
+				</div>
+			</div>
+				}
+			}
+			else
+			{
+			<div class="alert alert-warning">Araç bulunmamaktadır.</div>
+			}
+		</div>
+	</div>
+</div>

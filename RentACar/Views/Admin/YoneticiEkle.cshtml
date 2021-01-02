@@ -1,0 +1,25 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Yeni Yönetici Ekle";
+}
+
+<div class="container">
+	<h2>Yeni Yönetici</h2>
+	<div class="row">
+		<form id="yoneticikayitform">
+			<div class="form-group">
+				<label for="name">Ad Soyad:</label>
+				<input type="text" name="name" class="form-control" id="name">
+			</div>
+			<div class="form-group">
+				<label for="username">Kullanıcı Adı:</label>
+				<input type="text" name="username" class="form-control" id="username">
+			</div>
+			<div class="form-group">
+				<label for="password">Şifre:</label>
+				<input type="text" name="password" class="form-control" id="password">
+			</div>
+			<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+		</form>
+	</div>
+</div>

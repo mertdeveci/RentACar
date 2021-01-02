@@ -1,0 +1,26 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Detail";
+	var Car = Model as cars;
+}
+
+<div class="container" id="arac_detay">
+	<div class="row">
+		<div class="col-md-6">
+			<figure>
+				<img src="@Car.img" />
+			</figure>
+		</div>
+		<div class="col-md-6">
+			<h2>@Car.title</h2>
+			<p><b>Fiyat:</b> @Car.price ₺</p>
+			<p><b>Periyot:</b> @Car.period</p>
+			<p><b>KM:</b> @Car.km</p>
+			<p><b>Marka:</b> @Car.brand</p>
+			<p><b>Model:</b> @Car.model</p>
+			<p><b>Model Yılı:</b> @Car.modelyear</p>
+			<p><b>Renk:</b> @Car.color</p>
+			<a href="#" class="btn btn-success">Kirala »</a>
+		</div>
+	</div>
+</div>

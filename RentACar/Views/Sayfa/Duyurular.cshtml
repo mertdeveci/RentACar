@@ -1,0 +1,26 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Duyurular";
+	var Duyurular = Model as List<announcements>;
+	Duyurular = Duyurular == null ? new List<announcements>() : Duyurular;
+}
+
+<div class="container" id="arac_detay">
+	@if (Duyurular.Count > 0)
+	{
+
+		foreach (var item in Duyurular)
+		{
+	<div class="panel panel-default">
+		<div class="panel-heading">@item.title</div>
+		<div class="panel-body">
+			@item.description
+		</div>
+	</div>
+		}
+	}
+	else
+	{
+	<div class="alert alert-warning">Duyuru bulunmamaktadır.</div>
+	}
+</div>

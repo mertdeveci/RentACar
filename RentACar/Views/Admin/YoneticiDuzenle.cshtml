@@ -1,0 +1,27 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Yönetici Düzenle";
+	var admins = Model as admins;
+}
+
+<div class="container">
+	<h2>Yönetici Düzenle</h2>
+	<div class="row">
+		<form id="yoneticiduzenleform">
+			<input type="hidden" value="@admins.id" name="id" />
+			<div class="form-group">
+				<label for="name">Ad Soyad:</label>
+				<input type="text" name="name" class="form-control" id="name" value="@admins.name">
+			</div>
+			<div class="form-group">
+				<label for="username">Kullanıcı Adı:</label>
+				<input type="text" name="username" class="form-control" id="username" value="@admins.username">
+			</div>
+			<div class="form-group">
+				<label for="password">Şifre:</label>
+				<input type="text" name="password" class="form-control" id="password" value="@admins.password">
+			</div>
+			<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+		</form>
+	</div>
+</div>

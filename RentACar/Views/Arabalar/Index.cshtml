@@ -1,0 +1,32 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Tüm Araçlarımız";
+	var Cars = Model as List<cars>;
+	Cars = Cars == null ? new List<cars>() : Cars;
+}
+
+<div class="container">
+	<h2>Tüm Araçlarımız</h2>
+	<div class="row">
+
+		<div id="anasayfa_araclar2">
+			@if (Cars.Count > 0)
+			{
+				foreach (var item in Cars)
+				{
+			<div class="col-md-3 car">
+				<h4>@item.title</h4>
+				<figure><img src="@item.img"></figure>
+				<p>Fiyat: @item.price ₺</p>
+				<p>Periyot: @item.period</p>
+				<p><a class="btn btn-default" href="/Arabalar/Detay/@item.id" role="button">incele »</a></p>
+			</div>
+				}
+			}
+			else
+			{
+			<div class="alert alert-warning">Araç bulunmamaktadır.</div>
+			}
+		</div>
+	</div>
+</div>

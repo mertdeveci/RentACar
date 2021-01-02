@@ -1,0 +1,70 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Rezervasyon İşlem";
+	var Rezervasyan = Model as reservations;
+}
+
+<div class="container">
+	<h2>Rezervasyon İşlem : <b>@Rezervasyan.reservationcode</b></h2>
+	<div class="row">
+		<div class="panel panel-default">
+			<form class="rezervasyonform" id="rezervasyonislemform">
+				<input type="hidden" name="id" value="@Rezervasyan.id" />
+				<div class="form-group">
+					<label for="title">Ad Soyad:</label>
+					@Rezervasyan.name
+				</div>
+				<div class="form-group">
+					<label for="title">Telefon:</label>
+					@Rezervasyan.phone
+				</div>
+				<div class="form-group">
+					<label for="title">E-Posta:</label>
+					@Rezervasyan.email
+				</div>
+				<div class="form-group">
+					<label for="title">Şehir:</label>
+					@Rezervasyan.city
+				</div>
+				<div class="form-group">
+					<label for="title">Rezervasyon Kodu:</label>
+					@Rezervasyan.reservationcode
+				</div>
+				<div class="form-group">
+					<label for="title">Rezervasyon Süresi:</label>
+					@Rezervasyan.reservationtime
+				</div>
+				<div class="form-group">
+					<label for="brand">Araçlar:</label>
+					<br />
+					@if (Rezervasyan.cars != null)
+					{
+						var araclar = Rezervasyan.cars.Split(',');
+						int count = 1;
+						for (int i = 0; i < araclar.Length; i++)
+						{
+									<a target="_blank" href="/Arabalar/Detay/@araclar[i]">Araç @count</a><br />
+							count++;
+						}
+					}
+				</div>
+				<div class="form-group">
+					<label for="title">Müşteriye Notu:</label>
+					<textarea class="form-control" name="reservationnot">@Rezervasyan.reservationnot</textarea>
+				</div>
+				<div class="form-group">
+					<label for="title">Yöneticiye Notu:</label>
+					<textarea class="form-control" name="reservationadminnot">@Rezervasyan.reservationadminnot</textarea>
+				</div>
+				<div class="form-group">
+					<label for="title">Rezervasyon Durumu:</label>
+					<select name="isclose" class="form-control">
+						<option value="false" @if (Rezervasyan.isclose == false) { <text> selected</text>}>Açık</option>
+						<option value="true" @if (Rezervasyan.isclose == true) { <text> selected</text>}>Kapandı</option>
+					</select>
+				</div>
+				<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+			</form>
+		</div>
+	</div>
+</div>

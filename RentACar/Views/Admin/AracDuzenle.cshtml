@@ -1,0 +1,57 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Yeni Düzenle";
+	var Car = Model as cars;
+}
+
+<div class="container">
+	<h2>Araç Düzenle</h2>
+	<div class="row">
+		<form id="aracduzenleform">
+			<input type="hidden" name="id" value="@Car.id" />
+			<div class="form-group">
+				<label for="title">Başlık:</label>
+				<input type="text" name="title" class="form-control" id="title" value="@Car.title">
+			</div>
+			<div class="form-group">
+				<label for="brand">Marka:</label>
+				<input type="text" name="brand" class="form-control" id="brand" value="@Car.brand">
+			</div>
+			<div class="form-group">
+				<label for="model">Model:</label>
+				<input type="text" name="model" class="form-control" id="model" value="@Car.model">
+			</div>
+			<div class="form-group">
+				<label for="km">Model Yılı:</label>
+				<input type="text" name="km" class="form-control" id="km" value="@Car.km">
+			</div>
+			<div class="form-group">
+				<label for="modelyear">KM:</label>
+				<input type="text" name="modelyear" class="form-control" id="modelyear" value="@Car.modelyear">
+			</div>
+			<div class="form-group">
+				<label for="color">Renk:</label>
+				<input type="text" name="color" class="form-control" id="color" value="@Car.color">
+			</div>
+			<div class="form-group">
+				<label for="price">Fiyat:</label>
+				<input type="text" name="price" class="form-control" id="price" value="@Car.price">
+			</div>
+			<div class="form-group">
+				<label for="period">Periyot:</label>
+				<select name="period" id="period" class="form-control">
+					<option value="Aylık" @if (Car.period == "Aylık") { <text> selected</text>}>Aylık</option>
+					<option value="Yıllık" @if (Car.period == "Aylık") { <text> selected</text>}>Yıllık</option>
+					<option value="Günlük" @if (Car.period == "Aylık") { <text> selected</text>}>Günlük</option>
+					<option value="Haftalık" @if (Car.period == "Aylık") { <text> selected</text>}>Haftalık</option>
+					<option value="Saatlik" @if (Car.period == "Aylık") { <text> selected</text>}>Saatlik</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="img">Resim:</label>
+				<input type="text" name="img" class="form-control" id="img" value="@Car.img">
+			</div>
+			<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+		</form>
+	</div>
+</div>

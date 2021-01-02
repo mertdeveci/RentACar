@@ -1,0 +1,23 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Duyuru Düzenle";
+	var announcements = Model as announcements;
+}
+
+<div class="container">
+	<h2>Duyuru Düzenle</h2>
+	<div class="row">
+		<form id="duyuruduzenleform">
+			<input type="hidden" value="@announcements.id" name="id" />
+			<div class="form-group">
+				<label for="title">Başlık:</label>
+				<input type="text" name="title" class="form-control" id="title" value="@announcements.title">
+			</div>
+			<div class="form-group">
+				<label for="description">Açıklama:</label>
+				<textarea name="description" id="description" class="form-control">@announcements.description</textarea>
+			</div>
+			<button type="submit" class="btn btn-success btn-block">Kaydet</button>
+		</form>
+	</div>
+</div>

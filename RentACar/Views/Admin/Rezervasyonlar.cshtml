@@ -1,0 +1,75 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Rezervasyonlar";
+	var Rezervasyonlar = Model as List<reservations>;
+	Rezervasyonlar = Rezervasyonlar == null ? new List<reservations>() : Rezervasyonlar;
+}
+
+<div class="container">
+	<h2>Rezervasyonlar</h2>
+	<div class="row">
+		<div class="panel panel-default">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Ad Soyad</th>
+						<th>Telefon</th>
+						<th>Araçlar</th>
+						<th>Rezervasyon Kodu</th>
+						<th>Rezervasyon Durumu</th>
+						<th>İşlem</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Rezervasyonlar.Count > 0)
+					{
+						foreach (var item in Rezervasyonlar)
+						{
+					<tr>
+						<td>@item.name</td>
+						<td>@item.phone</td>
+						<td>
+							@if (item.isclose == false)
+							{
+							<text>Rezervasyon açık</text>
+							}
+							else
+							{
+							<text>Rezervasyon kapatıldı</text>
+							}
+						</td>
+						<td>
+							@if (item.cars != null)
+							{
+								var araclar = item.cars.Split(',');
+								int count = 1;
+								for (int i = 0; i < araclar.Length; i++)
+								{
+								<a target="_blank" href="/Arabalar/Detay/@araclar[i]">Araç @count</a><br />
+									count++;
+								}
+							}
+						</td>
+						<td>@item.reservationcode</td>
+						<td>
+							<div class="btn-group" role="group">
+								<a class="btn btn-danger rezervasyonsil" data-id="@item.id">Sil</a>
+								<a class="btn btn-warning" href="/Admin/RezervasyonIslem/@item.id">İşlem</a>
+							</div>
+						</td>
+					</tr>
+						}
+					}
+					else
+					{
+					<tr>
+						<td colspan="5">
+							<div class="alert alert-warning">Rezervasyon bulunmamaktadır.</div>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

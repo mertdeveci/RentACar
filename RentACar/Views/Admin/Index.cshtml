@@ -1,0 +1,60 @@
+﻿@using RentACar.Models;
+@{
+	ViewBag.Title = "Tüm Araçlar";
+	var Cars = Model as List<cars>;
+	Cars = Cars == null ? new List<cars>() : Cars;
+}
+
+<div class="container">
+	<h2>Tüm Araçlarımız <a href="/Admin/YeniArac" class="btn btn-success">Araç ekle</a></h2>
+	<div class="row">
+		<div class="panel panel-default">
+			<table class="table">
+				<thead>
+					<tr>
+						<th width="100">#</th>
+						<th>Araç</th>
+						<th>Fiyat</th>
+						<th>Periyot</th>
+						<th>İşlem</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Cars.Count > 0)
+					{
+						foreach (var item in Cars)
+						{
+							<tr>
+								<td><img src="@item.img" style="max-width: 100px; max-height: 60px;" /></td>
+								<td>
+									<b>@item.title</b><br />
+									<b>Marka: </b>@item.brand<br />
+									<b>Model: </b>@item.model<br />
+									<b>Mdoel Yılı: </b>@item.modelyear<br />
+									<b>Renk: </b>@item.color<br />
+								</td>
+								<td>@item.price ₺</td>
+								<td>@item.period</td>
+								<td>
+									<div class="btn-group" role="group">
+										<a class="btn btn-danger aracsil" data-id="@item.id">Sil</a>
+										<a class="btn btn-warning" href="/Admin/AracDuzenle/@item.id">Düzenle</a>
+									</div>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+					<tr>
+						<td colspan="5">
+							<div class="alert alert-warning">Araç bulunmamaktadır.</div>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
